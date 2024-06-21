@@ -1,7 +1,7 @@
 FROM php:8.1-fpm
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --fix-missing \
     build-essential \
     libpng-dev \
     libjpeg62-turbo-dev \
@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     libonig-dev \
-    pkg-config
+    pkg-config \
+    libzip-dev  # Añadido para solucionar el error
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

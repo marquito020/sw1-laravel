@@ -17,8 +17,12 @@ services:
       - ./:/var/www
       - ./vendor:/var/www/vendor
       - ./node_modules:/var/www/node_modules
+      - ./wait-for-it.sh:/usr/bin/wait-for-it.sh
     networks:
       - app-network
+    depends_on:
+      - db
+    command: sh -c "/usr/bin/wait-for-it.sh db:3306 --timeout=60 --strict && php artisan serve --host=0.0.0.0 --port=8000"
 
   webserver:
     image: nginx:alpine
@@ -32,6 +36,8 @@ services:
       - ./.docker/nginx:/etc/nginx/conf.d/
     networks:
       - app-network
+    depends_on:
+      - app
 
   db:
     image: mysql:5.7.22
@@ -41,13 +47,27 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: laravel
+      MYSQL_DATABASE: acoso
       MYSQL_ROOT_PASSWORD: root
       MYSQL_PASSWORD: root
     volumes:
       - dbdata:/var/lib/mysql/
     networks:
       - app-network
+
+  migrate:
+    image: my-laravel-app
+    container_name: migrate
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/www
+    working_dir: /var/www
+    entrypoint: sh -c "/usr/bin/wait-for-it.sh db:3306 --timeout=60 --strict && php artisan migrate --force && php artisan db:seed --force"
+    networks:
+      - app-network
+    environment:
+      DB_HOST: db
 
 networks:
   app-network:

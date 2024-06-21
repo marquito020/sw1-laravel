@@ -21,8 +21,8 @@ class UserSeeder extends Seeder
         $user1=User::create([
             'name'=>'User',
             'email'=>'user@example.com',
-            'password'=>Hash::make('123123123')
-        ]); 
+            'password'=>Hash::make('12345678')
+        ]);
 
         $persona1=Persona::create([
             'nombre'=>'Valeria',
@@ -41,7 +41,7 @@ class UserSeeder extends Seeder
         $guardia1=Guardia::create([
             'estado'=>'1',
             'fecha_ini'=>'2023/05/05',
-            'persona_id'=>$persona1->id,    
+            'persona_id'=>$persona1->id,
         ]);
 
     }

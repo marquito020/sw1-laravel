@@ -32,6 +32,12 @@ WORKDIR /var/www
 
 COPY . /var/www
 
+# Install project dependencies
 RUN composer install
 
-CMD ["php-fpm"]
+# Copy start script
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# Set the entrypoint to the start script
+ENTRYPOINT ["start.sh"]

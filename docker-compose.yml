@@ -13,15 +13,13 @@ services:
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
-      - ./:/var/www
-      - ./vendor:/var/www/vendor
-      - ./node_modules:/var/www/node_modules
+      - .:/var/www
       - ./wait-for-it.sh:/usr/bin/wait-for-it.sh
     networks:
       - app-network
     depends_on:
       - db
-    command: sh -c "/usr/bin/wait-for-it.sh db:3306 --timeout=60 --strict && php artisan serve --host=0.0.0.0 --port=8000"
+    command: sh -c "/usr/bin/wait-for-it.sh db:3306 --timeout=60 --strict && php-fpm"
 
   webserver:
     image: nginx:alpine
@@ -31,7 +29,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./:/var/www
+      - .:/var/www
       - ./.docker/nginx:/etc/nginx/conf.d/
     networks:
       - app-network
@@ -53,22 +51,6 @@ services:
       - dbdata:/var/lib/mysql/
     networks:
       - app-network
-
-  migrate:
-    build:
-      context: .
-      dockerfile: .docker/php/Dockerfile
-    container_name: migrate
-    depends_on:
-      - db
-    volumes:
-      - ./:/var/www
-    working_dir: /var/www
-    entrypoint: sh -c "/usr/bin/wait-for-it.sh db:3306 --timeout=60 --strict && php artisan migrate --force && php artisan db:seed --force"
-    networks:
-      - app-network
-    environment:
-      DB_HOST: db
 
 networks:
   app-network:

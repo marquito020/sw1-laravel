@@ -35,6 +35,10 @@ COPY . /var/www
 # Install project dependencies
 RUN composer install
 
+# Copy and set permissions for wait-for-it.sh
+COPY wait-for-it.sh /usr/bin/wait-for-it.sh
+RUN chmod +x /usr/bin/wait-for-it.sh
+
 # Copy start script
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh

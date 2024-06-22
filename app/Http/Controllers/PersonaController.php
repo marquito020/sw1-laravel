@@ -54,8 +54,13 @@ class PersonaController extends Controller
         try {
             DB::beginTransaction();
 
-            if ($request->hasFile('foto')) {
+            /* if ($request->hasFile('foto')) {
                 $data['foto'] = Storage::disk('public')->put('foto', $request->foto);
+            } */
+
+            //S3
+            if ($request->hasFile('foto')) {
+                $data['foto'] = Storage::disk('s3')->put('foto', $request->foto);
             }
 
             $persona = Persona::create($data);
@@ -195,7 +200,7 @@ class PersonaController extends Controller
             //@@@ ]);
 
             DB::commit();
-            
+
             $responseArr['data'] = [];
             return response()->json($responseArr, Response::HTTP_OK);
         } catch (Exception $e) {
@@ -219,7 +224,7 @@ class PersonaController extends Controller
 
             //@@@ Binnacle::create([
             //@@@     'user_id' => auth()->user()->id,
-            //@@@     'description' => 'El usuario ' . auth()->user()->name . ' restauró Persona: ' . $persona->id 
+            //@@@     'description' => 'El usuario ' . auth()->user()->name . ' restauró Persona: ' . $persona->id
             //@@@     . ' con id:' . $persona->id . '.'
             //@@@ ]);
             DB::commit();

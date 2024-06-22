@@ -21,8 +21,8 @@ class EventoController extends Controller
         $responseArr['message'] = 'Lista<Evento> enviada correctamente';
         try {
             $responseArr['data'] = Evento::Trabajador($request->trabajador_id)
-                                   ->Camara($request->camara_id)
-                                   ->get();
+                ->Camara($request->camara_id)
+                ->get();
             return response()->json($responseArr, Response::HTTP_OK);
         } catch (Exception $e) {
             $message = $e;
@@ -40,11 +40,11 @@ class EventoController extends Controller
     public function store(StoreEventoRequest $request)
     {
         $data = [
-            'fecha'=>$request->fecha,
-            'descripcion'=>$request->descripcion,
-            'es_queja'=>$request->es_queja,
-            'trabajador_id'=>$request->trabajador_id,
-            'camara_id'=>$request->camara_id,
+            'fecha' => $request->fecha,
+            'descripcion' => $request->descripcion,
+            'es_queja' => $request->es_queja,
+            'trabajador_id' => $request->trabajador_id,
+            'camara_id' => $request->camara_id,
 
         ];
 
@@ -87,11 +87,11 @@ class EventoController extends Controller
     public function storeEvidencia(StoreEventoRequest $request)
     {
         $data = [
-            'fecha'=>$request->fecha,
-            'descripcion'=>$request->descripcion,
-            'es_queja'=>$request->es_queja,
-            'trabajador_id'=>$request->trabajador_id,
-            'camara_id'=>$request->camara_id,
+            'fecha' => $request->fecha,
+            'descripcion' => $request->descripcion,
+            'es_queja' => $request->es_queja,
+            'trabajador_id' => $request->trabajador_id,
+            'camara_id' => $request->camara_id,
 
         ];
 
@@ -106,13 +106,14 @@ class EventoController extends Controller
 
 
             $data2 = [
-                'file'=>'',
-                'evento_id'=>$evento->id,
-                'tipo'=>$request->tipo
+                'file' => '',
+                'evento_id' => $evento->id,
+                'tipo' => $request->tipo
             ];
 
+            //S3
             if ($request->hasFile('file')) {
-                $data2['file'] = Storage::disk('public')->put('file', $request->file);
+                $data2['file'] = Storage::disk('s3')->put('file', $request->file);
             }
 
             $evidencia = Evidencia::create($data2);
@@ -154,11 +155,11 @@ class EventoController extends Controller
     public function update(UpdateEventoRequest $request, Evento $evento)
     {
         $data = [
-            'fecha'=>$request->fecha,
-            'descripcion'=>$request->descripcion,
-            'es_queja'=>$request->es_queja,
-            'trabajador_id'=>$request->trabajador_id,
-            'camara_id'=>$request->camara_id,
+            'fecha' => $request->fecha,
+            'descripcion' => $request->descripcion,
+            'es_queja' => $request->es_queja,
+            'trabajador_id' => $request->trabajador_id,
+            'camara_id' => $request->camara_id,
 
         ];
 
@@ -211,7 +212,7 @@ class EventoController extends Controller
         try {
             DB::beginTransaction();
 
-            $id=$evento->id;
+            $id = $evento->id;
 
             $evento->delete();
 
@@ -222,7 +223,7 @@ class EventoController extends Controller
             //@@@ ]);
 
             DB::commit();
-            
+
             $responseArr['data'] = [];
             return response()->json($responseArr, Response::HTTP_OK);
         } catch (Exception $e) {
@@ -246,7 +247,7 @@ class EventoController extends Controller
 
             //@@@ Binnacle::create([
             //@@@     'user_id' => auth()->user()->id,
-            //@@@     'description' => 'El usuario ' . auth()->user()->name . ' restauró Evento: ' . $evento->id 
+            //@@@     'description' => 'El usuario ' . auth()->user()->name . ' restauró Evento: ' . $evento->id
             //@@@     . ' con id:' . $evento->id . '.'
             //@@@ ]);
             DB::commit();

@@ -49,8 +49,13 @@ class EvidenciaController extends Controller
         try {
             DB::beginTransaction();
 
-            if ($request->hasFile('file')) {
+            /* if ($request->hasFile('file')) {
                 $data['file'] = Storage::disk('public')->put('file', $request->file);
+            } */
+
+            //S3
+            if ($request->hasFile('file')) {
+                $data['file'] = Storage::disk('s3')->put('file', $request->file);
             }
 
             $evidencia = Evidencia::create($data);
@@ -74,8 +79,13 @@ class EvidenciaController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
 
-            if (!is_null($data['file'])) {
+            /* if (!is_null($data['file'])) {
                 Storage::disk('public')->delete($data['file']);
+            } */
+
+            //S3
+            if (!is_null($data['file'])) {
+                Storage::disk('s3')->delete($data['file']);
             }
 
             $message = $e;

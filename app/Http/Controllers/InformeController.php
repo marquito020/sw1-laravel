@@ -52,8 +52,13 @@ class InformeController extends Controller
         try {
             DB::beginTransaction();
 
-            if ($request->hasFile('documento')) {
+            /* if ($request->hasFile('documento')) {
                 $data['documento'] = Storage::disk('public')->put('documento', $request->documento);
+            } */
+
+            //S3
+            if ($request->hasFile('documento')) {
+                $data['documento'] = Storage::disk('s3')->put('documento', $request->documento);
             }
 
             $informe = Informe::create($data);
@@ -190,7 +195,7 @@ class InformeController extends Controller
             //@@@ ]);
 
             DB::commit();
-            
+
             $responseArr['data'] = [];
             return response()->json($responseArr, Response::HTTP_OK);
         } catch (Exception $e) {
@@ -214,7 +219,7 @@ class InformeController extends Controller
 
             //@@@ Binnacle::create([
             //@@@     'user_id' => auth()->user()->id,
-            //@@@     'description' => 'El usuario ' . auth()->user()->name . ' restauró Informe: ' . $informe->id 
+            //@@@     'description' => 'El usuario ' . auth()->user()->name . ' restauró Informe: ' . $informe->id
             //@@@     . ' con id:' . $informe->id . '.'
             //@@@ ]);
             DB::commit();

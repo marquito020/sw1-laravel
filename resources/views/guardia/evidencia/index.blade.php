@@ -52,7 +52,7 @@
                                         </td>
                                     @endif --}}
                                     <td>
-                                        <a href="{{ asset('files/' . $p->file) }}" target="_blank" download>Descargar evidencia</a>
+                                    <a href="{{ Storage::disk('s3')->url('' . $p->file) }}" target="_blank" download>Descargar evidencia</a>
                                     </td>
                                     <td>{{$p->tipo}}</td>
                                 </tr>

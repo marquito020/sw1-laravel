@@ -15,7 +15,7 @@ class InformeControllerWeb extends Controller
     public function indexAdmin()
     {
         $informes=Informe::all();
-        
+
         return view('admin.informe.index',compact('informes'));
     }
 
@@ -50,8 +50,13 @@ class InformeControllerWeb extends Controller
             'documento'=>'',
         ];
 
-        if ($request->hasFile('documento')) {
+        /* if ($request->hasFile('documento')) {
             $data['documento'] = Storage::disk('public')->put('documentos', $request->documento);
+        } */
+
+        //S3
+        if ($request->hasFile('documento')) {
+            $data['documento'] = Storage::disk('s3')->put('documentos', $request->documento);
         }
 
         Informe::create($data);

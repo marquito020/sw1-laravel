@@ -36,7 +36,9 @@
                                 <tr>
                                     <td>{{ $p->id }}</td>
                                     <td>{{ $p->titulo }}</td>
-                                    <td><a href="{{ asset('storage/' . $p->documento) }}">Ver Documento</a></td>
+                                    <!-- <td><a href="{{ asset('storage/' . $p->documento) }}">Ver Documento</a></td> -->
+                                    <td><a href="{{ Storage::disk('s3')->url('' . $p->documento) }}" target="_blank"
+                                            download>Descargar informe</a></td>
                                     <td>Estado</td>
                                 </tr>
                             @endforeach

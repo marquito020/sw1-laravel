@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --fix-missing \
     curl \
     libonig-dev \
     pkg-config \
-    libzip-dev  # Añadido para solucionar el error
+    libzip-dev
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -30,18 +30,18 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
+# Copy project files
 COPY . /var/www
+
+# Copy scripts
+COPY wait-for-it.sh /usr/bin/wait-for-it.sh
+COPY start.sh /usr/local/bin/start.sh
+
+# Ensure scripts are executable
+RUN chmod +x /usr/local/bin/start.sh /usr/bin/wait-for-it.sh
 
 # Install project dependencies
 RUN composer install
-
-# Copy and set permissions for wait-for-it.sh
-COPY wait-for-it.sh /usr/bin/wait-for-it.sh
-RUN chmod +x /usr/bin/wait-for-it.sh
-
-# Copy start script
-COPY start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
 
 # Set the entrypoint to the start script
 ENTRYPOINT ["start.sh"]

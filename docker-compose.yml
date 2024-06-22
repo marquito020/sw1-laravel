@@ -7,7 +7,7 @@ services:
       dockerfile: .docker/php/Dockerfile
     image: my-laravel-app
     container_name: app
-    restart: unless-stopped
+    restart: always
     tty: true
     environment:
       SERVICE_NAME: app
@@ -22,12 +22,13 @@ services:
       - app-network
     depends_on:
       - db
+      - migrate
     command: sh -c "/usr/bin/wait-for-it.sh db:3306 --timeout=60 --strict && php artisan serve --host=0.0.0.0 --port=8000"
 
   webserver:
     image: nginx:alpine
     container_name: webserver
-    restart: unless-stopped
+    restart: always
     tty: true
     ports:
       - "8000:80"
@@ -42,7 +43,7 @@ services:
   db:
     image: mysql:5.7.22
     container_name: db
-    restart: unless-stopped
+    restart: always
     tty: true
     ports:
       - "3306:3306"
@@ -58,6 +59,7 @@ services:
   migrate:
     image: my-laravel-app
     container_name: migrate
+    restart: always
     depends_on:
       - db
     volumes:

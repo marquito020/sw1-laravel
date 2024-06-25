@@ -25,8 +25,8 @@ class UserSeeder extends Seeder
         ]);
 
         $persona1=Persona::create([
-            'nombre'=>'Valeria',
-            'apellido_p'=>'Coronado',
+            'nombre'=>'Laura',
+            'apellido_p'=>'Ugarte',
             'apellido_m'=>'Arispe',
             'ci'=>'00000',
             'telefono'=>'62066339',

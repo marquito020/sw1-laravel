@@ -40,7 +40,7 @@ Route::prefix('admin')->group(function () {
 });
 
 
-Route::prefix('guardia')->group(function () {
+/* Route::prefix('guardia')->group(function () { */
 
     Route::middleware(['guest:admin', 'guest:guardia'])->group(function () {
         Route::get('/login', [GuardiaControllerWeb::class, 'loginView'])->name('guardia.login.view');
@@ -59,4 +59,4 @@ Route::prefix('guardia')->group(function () {
         Route::get('/evidencias/{evento}', [EvidenciaControllerWeb::class, 'indexGuardia'])->name('guardia.evidencia.index');
 
     });
-});
+/* }); */
